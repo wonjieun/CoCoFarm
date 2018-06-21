@@ -129,10 +129,6 @@ public class ReceiptDto {
 	}
 	public void setBuyer(String buyer) {
 		this.buyer = buyer;
-	}public Integer getSale_option_idx() {
-		return sale_option_idx;
-	}public void setSale_option_idx(Integer sale_option_idx) {
-		this.sale_option_idx = sale_option_idx;
 	}
 	public Integer getSale_idx() {
 		return Sale_idx;
