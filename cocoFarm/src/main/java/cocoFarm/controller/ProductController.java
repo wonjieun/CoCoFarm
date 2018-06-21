@@ -51,7 +51,6 @@ public class ProductController {
 		return "main/mainseller/sellermain";
 	}
 	
-	
 	//판매 상세 정보
 	@RequestMapping(value="/seller.do",method=RequestMethod.POST)
 	public String searchviewList(Product product, Model model) {
@@ -59,7 +58,6 @@ public class ProductController {
 		model.addAttribute("seller",(productService.getSerchList(product)));
 		return "main/mainseller/sellermain";
 	}
-	
 	
 	//판매 디테일 뷰
 	@RequestMapping(value="/sellerDetail.do",method=RequestMethod.GET)
@@ -105,7 +103,7 @@ public class ProductController {
 	// 판매 상품 등록
 	@RequestMapping(value="/product/insert.do", method=RequestMethod.POST)
 	public String insertProduct(Product product, Option opt, FileDto f, HttpSession session) {
-
+		
 		List<MultipartFile> list = f.getUpload();
 		
 		// 고유 식별자
@@ -181,7 +179,6 @@ public class ProductController {
 		int j=-1;
 		for(MultipartFile m: f.getUpload()) {
 			++j;
-			System.out.println("j: "+j);
 			if(m.isEmpty())continue;
 			try {
 				destAr[j] = new StringBuilder()
@@ -208,6 +205,11 @@ public class ProductController {
 		productService.update(opt);
 		
 		return "redirect:/product";
+	}
+	
+	@RequestMapping(value="/product/cart.do", method=RequestMethod.POST)
+	public String basket() {
+		return "redirect:/product/cart.do";
 	}
 
 	// 장바구니 조회
@@ -283,6 +285,12 @@ public class ProductController {
 	}
 	
 	// 장바구니 옵션 수정
+	@RequestMapping(value="/product/updateCart.do", method=RequestMethod.GET)
+	public String updateCart() {
+		return "redirect:/product/cart.do";
+	}
+	
+	// 장바구니 옵션 수정
 	@RequestMapping(value="/product/updateCart.do", method=RequestMethod.POST)
 	@ResponseBody
 	public List updateCart(String cart, HttpSession session) {
@@ -302,12 +310,14 @@ public class ProductController {
 		
 		return items;
 	}
+
+	@RequestMapping(value="/product/viewComment.do", method=RequestMethod.GET)
+	public void comm() {	}
 	
 	// 상품 후기 조회
 	@RequestMapping(value="/product/viewComment.do", method=RequestMethod.POST)
 	@ResponseBody
 	public List<HashMap<String, Object>> comment(Comment comment, String sale_idx) {
-		logger.info("viewComment.do POST!!");
 				
 		List<HashMap<String, Object>> items = new ArrayList<HashMap<String,Object>>();
 		Map<String, Object> item = new HashMap<>();
@@ -317,26 +327,26 @@ public class ProductController {
 		return items;
 	}
 	
-	@RequestMapping(value="/product/viewComment.do", method=RequestMethod.GET)
-	public void comm() {	}
+	@RequestMapping(value="/product/insertComment.do", method=RequestMethod.GET)
+	public void insertComm() {	}
 	
 	// 상품후기 등록
 	@RequestMapping(value="/product/insertComment.do", method=RequestMethod.POST)
 	@ResponseBody
 	public boolean insertComment(Comment comment
-								, String title
+								, int receiptIdx
+								, int optionIdx
 								, String insertComm
 								, HttpSession session) {
 
 		Gson gson = new Gson();
 		List list = gson.fromJson(insertComm, List.class);
 		
-		Product product = productService.selectProductByReceipt(title);
+		Product product = productService.selectProductByReceipt(receiptIdx, optionIdx);
 		
 		if(list.get(0) != null) {
 			for(int i=0; i<list.size(); i++) {
 				Map<String, String> map = (Map) list.get(i);
-				System.out.println(map.get("main_recpt_idx"));
 				String str = map.get("main_recpt_idx");
 				
 				Comment comm = new Comment();

@@ -6,14 +6,17 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
-<link rel="stylesheet" type="text/css" href="/css/paynee.css">
+<title>결제 내역 조회</title>
+
+<link rel="stylesheet" type="text/css" href="/css/board.css">
 
 <script type="text/javascript">
-/* 상품 후기 열기 눌렀을 때, 상품평 등록 버튼 눌렀을 때 */
+
+/* 상품평 등록 버튼 눌렀을 때 */
 $(".insertComm_button").click(function() {
-	var productTitle = $(this).parent().parent().find("#product_title").text();
-	console.log(productTitle);
+	var receipt_idx = $(this).parent().parent().find("#receipt_idx").text();
+	var sale_option_idx = $(this).parent().find("#option_idx").val();
+	console.log(sale_option_idx);
 	
 	var arr = new Array();
 	var obj = new Object();
@@ -24,22 +27,25 @@ $(".insertComm_button").click(function() {
 		arr.push(null);
 	} else {
 		obj.main_recpt_idx = $(this).val();
-		console.log($(this).val());
 		obj.content = cont;
 		arr.push(obj);
 	}
+	
+	console.log(arr);
 	
 	$.ajax({
 		type: "POST"
 			, url: "/product/insertComment.do"
 			, dataType: "json"
 			, data: {
-				title: productTitle
+				receiptIdx: receipt_idx
+				, optionIdx: sale_option_idx
 				, insertComm: JSON.stringify(arr)
 			}
 			, success: function(data) {
 				alert("상품평이 등록되었습니다.");
 				$("#commentContent").val("");
+				location.reload();
 			}
 	});
 
@@ -65,7 +71,7 @@ $(".insertComm_button").click(function() {
 </div>
 
 <div>
-   <table class="message_table01" style="table-layout:fixed; word-break:break-all; text-align:center; border-bottom:1px solid #ddd;" >
+   <table class="payCheck_table">
       <colgroup>
 					<col width="100px">
 					<col width="100px">
@@ -78,9 +84,7 @@ $(".insertComm_button").click(function() {
 					<col width="70px">
 		</colgroup>
       <thead>
-      
-      
-         <tr style="border-bottom:1px solid #ddd;">
+         <tr class="payCheck_menu">
             <th class="message_num">주문번호</th> <!--주문번호  -->
             <th class="message_th">판매자 이름</th>
             <th class="message_th">구매한 옵션</th>
@@ -95,8 +99,8 @@ $(".insertComm_button").click(function() {
       </thead>
       <tbody>
       <c:forEach items="${paynee }" var="paynee">
-				<tr class="message">
-         	<td class="message_td">${paynee.idx}</td>
+				<tr class="payCheck_cont">
+         	<td class="message_td" id="receipt_idx">${paynee.idx}</td>
          	<td class="message_td">${paynee.seller }</td>
         	<td class="message_td" id="product_title">${paynee.name }</td> <!--구매한 옵션  -->
 					<td class="message_td">${paynee.amount }</td> <!--수량  -->
@@ -107,8 +111,13 @@ $(".insertComm_button").click(function() {
             
           <td class="message_td">${paynee.money_amount }</td>
           <td class="message_td"><fmt:formatDate value="${paynee.contract_time }" pattern="yyyy-MM-dd"/></td>
+          
          	<td class="message_td">
-         		<button class="insertComm_button"	value="${paynee.main_recpt_idx }">등록</button></td>
+          <c:if test="${paynee.comm == '0'}">
+         		<button class="insertComm_button"	value="${paynee.main_recpt_idx }">등록</button>
+         		<input type="hidden" id="option_idx" value="${paynee.sale_option_idx }">
+         	</c:if>
+         	</td>
          </tr>
       </c:forEach>
       </tbody>

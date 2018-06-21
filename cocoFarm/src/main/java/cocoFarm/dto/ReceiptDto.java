@@ -19,12 +19,26 @@ public class ReceiptDto {
 	private int price;				//단위당 가격
 	private String sale_title;		//경매글 제목
 	
-	private int main_recpt_idx;
+	private String main_recpt_idx;	//영수증 번호
+	private int sale_option_idx;	//옵션 번호
+	private int comm;				//상품후기 여부 (0: 등록X, 1: 등록O)
 	
-	public int getMain_recpt_idx() {
+	public int getComm() {
+		return comm;
+	}
+	public void setComm(int comm) {
+		this.comm = comm;
+	}
+	public int getSale_option_idx() {
+		return sale_option_idx;
+	}
+	public void setSale_option_idx(int sale_option_idx) {
+		this.sale_option_idx = sale_option_idx;
+	}
+	public String getMain_recpt_idx() {
 		return main_recpt_idx;
 	}
-	public void setMain_recpt_idx(int main_recpt_idx) {
+	public void setMain_recpt_idx(String main_recpt_idx) {
 		this.main_recpt_idx = main_recpt_idx;
 	}
 	public String getIdx() {

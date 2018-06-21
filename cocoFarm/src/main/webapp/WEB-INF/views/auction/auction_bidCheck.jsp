@@ -9,6 +9,7 @@
 <title>Insert title here</title>
 <link rel="stylesheet" type="text/css" href="/css/reset.css">
 <link rel="stylesheet" type="text/css" href="/css/style.css">
+<link rel="stylesheet" type="text/css" href="/css/board.css">
 
 <!-- 아임포트 -->
 <script src="https://service.iamport.kr/js/iamport.payment-1.1.5.js" type="text/javascript"></script>
@@ -101,6 +102,7 @@ $(document).ready(function() {
 											msg += '\n결제 금액 : ' + rsp.paid_amount;
 											msg += '\n카드 승인번호 : ' + rsp.apply_num;
 											alert(msg);
+											location.href="/mypageIntro.do";
 										}else {
 											//[3] 아직 제대로 결제가 되지 않았습니다.
 											//[4] 결제된 금액이 요청한 금액과 달라 결제를 자동취소처리하였습니다.
